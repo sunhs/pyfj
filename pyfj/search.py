@@ -14,11 +14,11 @@ def match_dispatcher(
             continue
 
         if len(patterns) == 1 and not patterns[0].endswith("$"):
-            if whole_match(patterns[0], candidate):
+            if whole_match(patterns[0].lower(), candidate.lower()):
                 rst.append((idx, candidate))
         else:
             parts = re.split(sep, candidate)
-            if part_match(patterns, parts):
+            if part_match([p.lower() for p in patterns], [p.lower() for p in parts]):
                 rst.append((idx, candidate))
 
         if len(rst) == count:
