@@ -2,7 +2,7 @@ from typing import *
 
 import click
 
-from pyfj import jumper, search
+from pyfj import jumper
 
 
 @click.group()
@@ -15,6 +15,8 @@ def cli():
 def jump(patterns: List[str]):
     j = jumper.Jumper()
     matched = j.jump(patterns)
+    if matched is None:
+        exit(1)
     print(matched)
 
 
@@ -23,7 +25,7 @@ def jump(patterns: List[str]):
 def hint(patterns: List[str]):
     j = jumper.Jumper()
     hints = j.hint(patterns)
-    print(hints)
+    print("\n".join(hints))
 
 
 cli.add_command(jump)

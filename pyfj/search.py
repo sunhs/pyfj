@@ -1,20 +1,23 @@
 import os
+import re
 from typing import *
 
 
-def match_dispatcher(patterns: List[str], candidates: List[str], count=1) -> List[Tuple[int, str]]:
+def match_dispatcher(
+    patterns: List[str], candidates: List[str], count: int = 1, sep: str = "/"
+) -> List[Tuple[int, str]]:
     cwd = os.getcwd()
-    rst = []
+    rst: List[Tuple[int, str]] = []
 
     for idx, candidate in enumerate(candidates):
-        if candidates == cwd:
+        if candidate == cwd:
             continue
 
         if len(patterns) == 1:
             if whole_match(patterns[0], candidate):
                 rst.append((idx, candidate))
         else:
-            parts = candidate.split("/")
+            parts = re.split(sep, candidate)
             if part_match(patterns, parts):
                 rst.append((idx, candidate))
 
@@ -33,8 +36,15 @@ def part_match(patterns: List[str], candidate_parts: List[str]) -> bool:
     rev_cand_parts = reversed(candidate_parts)
 
     pat = next(rev_pats)
-    for cand_part in rev_cand_parts:
+    force_match_end = False
+    if pat.endswith("$"):
+        pat = pat[:-1]
+        force_match_end = True
+
+    for i, cand_part in enumerate(rev_cand_parts):
         if not reverse_lcs(pat, cand_part):
+            if force_match_end and i == 0:
+                return False
             continue
 
         try:
