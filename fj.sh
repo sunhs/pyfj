@@ -1,9 +1,11 @@
 fj() {
-    if [ $# -eq 1 ]; then
-        if [[ $1 = "-" || $1 -lt 0 ]]; then
-            cd $1
-            return 0
+    if [ $# -eq 1 ] && [[ "$1" =~ "-.*" ]]; then
+        if [ "$1" = "-" ] || [ "$1" -lt 0 ] 2>/dev/null; then
+            cd "$1"
+        else
+            pyfj_cli.py $@
         fi
+        return 0
     fi
 
     local dir
