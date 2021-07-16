@@ -11,13 +11,13 @@ from pyfj import search
 class Config:
     nhistory: int = 200
     nhint: int = 10
-    sep: str = "/_-"
+    sep: str = "/|_|-"
 
     def load_config(self, path: str):
         if not os.path.exists(path):
             return
 
-        data: dict = json.load(path)
+        data: Dict[str, Union[str, int]] = json.load(path)
         for k, v in data.items():
             if k in self.__annotations__:
                 v = self.__annotations__[k](v)
@@ -61,8 +61,11 @@ class Jumper:
             pickle.dump(self.db, f)
 
     def jump(self, patterns: List[str]) -> Optional[str]:
+        if not patterns:
+            patterns = [os.path.expanduser("~")]
+
         if len(patterns) == 1 and os.path.isdir(patterns[0]):
-            path = os.path.expanduser(patterns[0])
+            path = os.path.abspath(os.path.expanduser(patterns[0]))
             idx = None
             try:
                 idx = self.db.index(path)
@@ -71,7 +74,7 @@ class Jumper:
             self._update_db(path, idx)
             return path
 
-        rst = search.match_dispatcher(patterns, self.db)
+        rst = search.match_dispatcher(patterns, self.db, sep=self.conf.sep)
 
         if not rst:
             return None
@@ -81,5 +84,5 @@ class Jumper:
         return matched
 
     def hint(self, patterns: List[str]) -> List[str]:
-        rst = search.match_dispatcher(patterns, self.db, self.conf.nhint)
+        rst = search.match_dispatcher(patterns, self.db, self.conf.nhint, self.conf.sep)
         return [tpl[1] for tpl in rst]
