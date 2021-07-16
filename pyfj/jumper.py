@@ -11,7 +11,8 @@ from pyfj import search
 class Config:
     nhistory: int = 200
     nhint: int = 10
-    sep: str = "/|_|-"
+    # sep: str = "/|_|-"
+    sep: str = "/"
 
     def load_config(self, path: str):
         if not os.path.exists(path):

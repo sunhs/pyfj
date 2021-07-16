@@ -13,7 +13,7 @@ def match_dispatcher(
         if candidate == cwd:
             continue
 
-        if len(patterns) == 1:
+        if len(patterns) == 1 and not patterns[0].endswith("$"):
             if whole_match(patterns[0], candidate):
                 rst.append((idx, candidate))
         else:
