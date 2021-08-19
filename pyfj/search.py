@@ -13,16 +13,27 @@ def match_dispatcher(
         if candidate == cwd:
             continue
 
-        if len(patterns) == 1 and not patterns[0].endswith("$"):
-            if whole_match(patterns[0].lower(), candidate.lower()):
-                rst.append((idx, candidate))
-        else:
-            parts = re.split(sep, candidate)
-            if part_match([p.lower() for p in patterns], [p.lower() for p in parts]):
-                rst.append((idx, candidate))
+        # if len(patterns) == 1 and not patterns[0].endswith("$"):
+        #     if whole_match(patterns[0].lower(), candidate.lower()):
+        #         rst.append((idx, candidate))
+        # else:
+        parts = re.split(sep, candidate)
+        if part_match([p.lower() for p in patterns], [p.lower() for p in parts]):
+            rst.append((idx, candidate))
 
         if len(rst) == count:
-            break
+            return rst
+
+    if len(patterns) == 1:
+        for idx, candidate in enumerate(candidates):
+            if candidate == cwd:
+                continue
+
+            if whole_match(patterns[0].lower(), candidate.lower()):
+                rst.append((idx, candidate))
+
+            if len(rst) == count:
+                return rst
 
     return rst
 
@@ -36,7 +47,7 @@ def part_match(patterns: List[str], candidate_parts: List[str]) -> bool:
     rev_cand_parts = reversed(candidate_parts)
 
     pat = next(rev_pats)
-    force_match_end = False
+    force_match_end = True
     if pat.endswith("$"):
         pat = pat[:-1]
         force_match_end = True
