@@ -87,3 +87,10 @@ class Jumper:
     def hint(self, patterns: List[str]) -> List[str]:
         rst = search.match_dispatcher(patterns, self.db, self.conf.nhint, self.conf.sep)
         return [tpl[1] for tpl in rst]
+
+    def clean(self):
+        old_len = len(self.db)
+        self.db = list(filter(lambda path: os.path.isdir(path), self.db))
+        with open(self.db_path, "wb") as f:
+            pickle.dump(self.db, f)
+        print(f"Removed {old_len - len(self.db)} non existent paths.")

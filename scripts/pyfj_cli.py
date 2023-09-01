@@ -29,8 +29,15 @@ def hint(patterns: List[str]):
     print("\n".join(hints))
 
 
+@click.command()
+def clean():
+    j = jumper.Jumper()
+    j.clean()
+
+
 cli.add_command(jump)
 cli.add_command(hint)
+cli.add_command(clean)
 
 
 if __name__ == "__main__":
