@@ -10,7 +10,7 @@ def match_dispatcher(
     rst: List[Tuple[int, str]] = []
 
     for idx, candidate in enumerate(candidates):
-        if cwd in (candidate, os.path.realpath(candidate)):
+        if cwd in (candidate, os.path.realpath(candidate)) or not os.path.isdir(candidate):
             continue
 
         # if len(patterns) == 1 and not patterns[0].endswith("$"):
@@ -26,7 +26,7 @@ def match_dispatcher(
 
     if len(patterns) == 1:
         for idx, candidate in enumerate(candidates):
-            if candidate == cwd:
+            if candidate == cwd or not os.path.isdir(candidate):
                 continue
 
             if whole_match(patterns[0].lower(), candidate.lower()):
