@@ -3,7 +3,7 @@ fj() {
         if [ "$1" = "-" ] || [ "$1" -lt 0 ] 2>/dev/null; then
             cd "$1"
         else
-            pyfj_cli.py $@
+            pyfj_cli $@
         fi
         return 0
     fi
@@ -11,7 +11,7 @@ fj() {
     local dir
     local code
 
-    dir="$(pyfj_cli.py jump $@)"
+    dir="$(pyfj_cli jump $@)"
     code=$?
     if [ $code -eq 0 ]; then
         cd "$dir"

@@ -40,5 +40,9 @@ cli.add_command(hint)
 cli.add_command(clean)
 
 
-if __name__ == "__main__":
+def main():
     cli()
+
+
+if __name__ == "__main__":
+    main()

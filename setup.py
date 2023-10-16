@@ -4,7 +4,10 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name="pyfj", packages=find_packages(include=("pyfj",)), scripts=["scripts/pyfj_cli.py"], install_requires=["click"]
+    name="pyfj",
+    packages=find_packages(include=("pyfj",)),
+    entry_points={"console_scripts": ["pyfj_cli = scripts.pyfj_cli:main"]},
+    install_requires=["click"]
 )
 
 bin_dir = os.path.expanduser("~/.local/bin")
